@@ -485,6 +485,10 @@ function simpletest_test_get_all_classes() {
 
   $classes = array();
   $files = module_rebuild_cache();
+  // as drupal-simple test classes do not have any common parent class
+  // the check for the existence for getInfo is by far not enaugh to determine its a
+  // valid SimpleTest class. So we need a black list
+  $blacklist = array('SplObjectStorage');
   foreach ($files as $file) {
     $directory = dirname($file->filename);
     $test_files = file_scan_directory($directory, '\.test$', array('.', '..', 'CVS'), FALSE, FALSE);
@@ -494,7 +498,7 @@ function simpletest_test_get_all_classes() {
       require_once $test_file->filename;
       $classes_new = get_declared_classes();
       foreach ($classes_new as $class) {
-        if(isset($classes[$class])) {
+        if(isset($classes[$class]) || array_search($class,$blacklist) !== FALSE) {
           continue;
         }
         // else
