@@ -491,13 +491,21 @@ function simpletest_test_get_all_classes() {
     $test_files += file_scan_directory($directory . '/tests', '\.test$');
 
     foreach ($test_files as $test_file) {
-      $pre = get_declared_classes();
       require_once $test_file->filename;
-      $post = get_declared_classes();
-
-      $classes_new = array_values(array_diff($post, $pre));
+      $classes_new = get_declared_classes();
       foreach ($classes_new as $class) {
-        $classes[$class] = (object) array('file' => $test_file->filename, 'class' => $class);
+        if(isset($classes[$class])) {
+          continue;
+        }
+        // else
+        try {
+          $r = new ReflectionClass($class);
+          $r->getMethod('getInfo');
+          $classes[$class] = (object) array('file' => $r->getFileName(), 'class' => $class);
+        }
+        catch(Exception $e) {
+          continue;
+        }
       }
     }
   }
