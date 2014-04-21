@@ -15,9 +15,3 @@
  * @param $message
  *   An e-mail message.
  */
-function drupal_mail_wrapper(array $message) {
-  $captured_emails = variable_get('drupal_test_email_collector', array());
-  $captured_emails[] = $message;
-  variable_set('drupal_test_email_collector', $captured_emails);
-  return TRUE;
-}
