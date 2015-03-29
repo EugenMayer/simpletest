@@ -1616,7 +1616,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function drupalGet($path, array $options = array(), array $headers = array()) {
     $options['absolute'] = TRUE;
-
+    $options['query'] = 'XDEBUG_SESSION_START=netbeans-xdebug';
     // We re-using a CURL connection here. If that connection still has certain
     // options set, it might change the GET into a POST. Make sure we clear out
     // previous options.
@@ -1699,6 +1699,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     if (isset($path)) {
       $this->drupalGet($path, $options);
     }
+    $options['query'] = 'XDEBUG_SESSION_START=netbeans-xdebug';
     if ($this->parse()) {
       $edit_save = $edit;
       // Let's iterate over all the forms.
